@@ -1,0 +1,78 @@
+global:
+  image:
+    tag: 8.5.1
+  ingress:
+    enabled: false
+  identity:
+    auth:
+      enabled: false
+
+zeebeGateway:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  ingress:
+    grpc:
+      enabled: false
+    rest:
+      enabled: false
+  env:
+    - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
+      value: "none"
+
+zeebe:
+  clusterSize: 3
+  partitionCount: 9
+  replicationFactor: 3
+  cpuThreadCount: 4
+  ioThreadCount: 4
+  pvcSize: 32Gi
+  logLevel: debug
+  resources:
+    requests:
+      cpu: 1
+      memory: "2Gi"
+    limits:
+      cpu: 2
+      memory: "4Gi"
+  env:
+    - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
+      value: "true"
+
+elasticsearch:
+  master:
+    replicaCount: 1
+    persistence:
+      size: 15Gi
+
+operate:
+  enabled: true
+
+prometheusServiceMonitor:
+  enabled: true
+
+identity:
+  enabled: false
+
+tasklist:
+  enabled: false
+
+optimize:
+  enabled: false
+
+connectors:
+  enabled: false
+
+webModeler:
+  enabled: false
+
+identityKeycloak:
+  enabled: false
+
+identityPostgresql:
+  enabled: false

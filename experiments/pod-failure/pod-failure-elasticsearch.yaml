@@ -1,0 +1,12 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  namespace: camunda
+  name: pod-failure-elasticsearch
+spec:
+  action: pod-failure
+  mode: all
+  duration: '60s'
+  selector:
+    labelSelectors:
+      'app.kubernetes.io/component': 'masster'

@@ -1,0 +1,21 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-partition-all-brokers-to-all-brokers
+spec:
+  action: partition
+  mode: all
+  selector:
+    namespaces:
+      - camunda
+    labelSelectors:
+      app.kubernetes.io/component: zeebe-broker
+  direction: both
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - camunda
+      labelSelectors:
+        app.kubernetes.io/component: zeebe-broker
+  duration: 180s
