@@ -1,0 +1,53 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: try-workflow-parallel
+spec:
+  entry: the-entry
+  templates:
+    - name: the-entry
+      templateType: Parallel
+      deadline: 600s
+      children:
+        - kill-1-broker
+        - kill-1-gateway
+        - kill-operate
+    - name: kill-1-broker
+      templateType: Schedule
+      deadline: 480s
+      schedule:
+        schedule: '@every 60s'
+        concurrencyPolicy: 'Allow'
+        type: 'PodChaos'
+        podChaos:
+          action: pod-kill
+          mode: one
+          selector:
+            labelSelectors:
+              'app.kubernetes.io/component': 'zeebe-broker'
+    - name: kill-1-gateway
+      templateType: Schedule
+      deadline: 480s
+      schedule:
+        schedule: '@every 60s'
+        concurrencyPolicy: 'Allow'
+        type: 'PodChaos'
+        podChaos:
+          action: pod-kill
+          mode: one
+          selector:
+            labelSelectors:
+              'app.kubernetes.io/component': 'zeebe-gateway'
+    - name: kill-operate
+      templateType: Schedule
+      deadline: 480s
+      schedule:
+        schedule: '@every 120s'
+        concurrencyPolicy: 'Allow'
+        type: 'PodChaos'
+        podChaos:
+          action: pod-kill
+          mode: one
+          selector:
+            labelSelectors:
+              'app.kubernetes.io/component': 'operate'
